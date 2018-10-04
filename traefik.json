@@ -59,11 +59,7 @@
   "gnetId": 4475,
   "graphTooltip": 0,
   "id": null,
-<<<<<<< HEAD
-  "iteration": 1538662098967,
-=======
-  "iteration": 1538662098964,
->>>>>>> f64f15b357ae52f966f4247b024eb1dab59ffa44
+  "iteration": 1538662098970,
   "links": [],
   "panels": [
     {
@@ -697,8 +693,4 @@
   "title": "Traefik",
   "uid": "qPdAviJmz",
   "version": 4
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> f64f15b357ae52f966f4247b024eb1dab59ffa44
