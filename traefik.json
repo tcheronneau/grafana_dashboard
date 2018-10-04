@@ -59,7 +59,7 @@
   "gnetId": 4475,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1538656696931,
+  "iteration": 1538656696934,
   "links": [],
   "panels": [
     {
@@ -634,26 +634,6 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
-      },
-      {
-        "allValue": null,
-        "current": {},
-        "datasource": "${DS_PROMETHEUS}",
-        "hide": 0,
-        "includeAll": false,
-        "label": null,
-        "multi": false,
-        "name": "service",
-        "options": [],
-        "query": "label_values(service)",
-        "refresh": 1,
-        "regex": "",
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
       }
     ]
   },
@@ -689,5 +669,5 @@
   "timezone": "",
   "title": "Traefik",
   "uid": "qPdAviJmz",
-  "version": 14
+  "version": 15
 }
