@@ -59,20 +59,20 @@
   "gnetId": 4475,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1538656696934,
+  "iteration": 1538662098967,
   "links": [],
   "panels": [
     {
       "cacheTimeout": null,
       "colorBackground": false,
-      "colorValue": false,
+      "colorValue": true,
       "colors": [
-        "#299c46",
+        "#d44a3a",
         "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
+        "#299c46"
       ],
       "datasource": "${DS_PROMETHEUS}",
-      "format": "s",
+      "format": "none",
       "gauge": {
         "maxValue": 100,
         "minValue": 0,
@@ -123,27 +123,28 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "time() - process_start_time_seconds{name=\"traefik-ingress-lb\"}",
+          "expr": "sum(traefik_backend_server_up{backend=\"$backend\"})/count(traefik_config_reloads_total)",
           "format": "time_series",
           "intervalFactor": 2,
           "refId": "A"
         }
       ],
-      "thresholds": "",
-      "title": "Uptime",
+      "thresholds": "0,1",
+      "title": "$backend status",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
         {
           "op": "=",
-          "text": "N/A",
-          "value": "null"
+          "text": "OK",
+          "value": "1"
         }
       ],
       "valueName": "current"
     },
     {
       "aliasColors": {},
+      "breakPoint": "50%",
       "cacheTimeout": null,
       "combine": {
         "label": "Others",
@@ -313,7 +314,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Total requests over 5min",
+      "title": "Total requests over 5min $backend",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -389,7 +390,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(traefik_entrypoint_requests_total{entrypoint=~\"http|https\",code=\"200\"}[5m])",
+          "expr": "rate(traefik_entrypoint_requests_total{entrypoint=~\"$entrypoint\",code=\"200\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{method}} : {{code}}",
@@ -475,7 +476,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(traefik_entrypoint_requests_total{entrypoint=~\"http|https\",code!=\"200\"}[5m])",
+          "expr": "rate(traefik_entrypoint_requests_total{entrypoint=~\"$entrypoint\",code!=\"200\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{ method }} : {{code}}",
@@ -524,6 +525,7 @@
     },
     {
       "aliasColors": {},
+      "breakPoint": "50%",
       "cacheTimeout": null,
       "combine": {
         "label": "Others",
@@ -556,16 +558,17 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{ backend }}",
+          "legendFormat": "{{ backend }}",
           "refId": "A"
         }
       ],
       "title": "Requests by service",
       "type": "grafana-piechart-panel",
-      "valueName": "current"
+      "valueName": "total"
     },
     {
       "aliasColors": {},
+      "breakPoint": "50%",
       "cacheTimeout": null,
       "combine": {
         "label": "Others",
@@ -594,17 +597,17 @@
       "strokeWidth": 1,
       "targets": [
         {
-          "expr": "sum(rate(traefik_entrypoint_requests_total{entrypoint =~ \"http|https\"}[5m])) by (entrypoint) ",
+          "expr": "sum(rate(traefik_entrypoint_requests_total{entrypoint =~ \"$entrypoint\"}[5m])) by (entrypoint) ",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{ entrypoint }}",
+          "legendFormat": "{{ entrypoint }}",
           "refId": "A"
         }
       ],
       "title": "Requests by protocol",
       "type": "grafana-piechart-panel",
-      "valueName": "current"
+      "valueName": "total"
     }
   ],
   "schemaVersion": 16,
@@ -626,6 +629,26 @@
         "name": "backend",
         "options": [],
         "query": "label_values(backend)",
+        "refresh": 1,
+        "regex": "",
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "${DS_PROMETHEUS}",
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "entrypoint",
+        "options": [],
+        "query": "label_values(entrypoint)",
         "refresh": 1,
         "regex": "",
         "sort": 0,
@@ -669,5 +692,5 @@
   "timezone": "",
   "title": "Traefik",
   "uid": "qPdAviJmz",
-  "version": 15
+  "version": 4
 }
