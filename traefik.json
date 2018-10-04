@@ -1,8 +1,8 @@
 {
   "__inputs": [
     {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
+      "name": "DS_PROM",
+      "label": "prom",
       "description": "",
       "type": "datasource",
       "pluginId": "prometheus",
@@ -14,13 +14,13 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "5.2.4"
+      "version": "5.2.2"
     },
     {
       "type": "panel",
       "id": "grafana-piechart-panel",
       "name": "Pie Chart",
-      "version": "1.1.6"
+      "version": "1.3.3"
     },
     {
       "type": "panel",
@@ -59,20 +59,20 @@
   "gnetId": 4475,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1538656696934,
+  "iteration": 1538661801091,
   "links": [],
   "panels": [
     {
       "cacheTimeout": null,
       "colorBackground": false,
-      "colorValue": false,
+      "colorValue": true,
       "colors": [
-        "#299c46",
+        "#d44a3a",
         "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
+        "#299c46"
       ],
-      "datasource": "${DS_PROMETHEUS}",
-      "format": "s",
+      "datasource": "${DS_PROM}",
+      "format": "none",
       "gauge": {
         "maxValue": 100,
         "minValue": 0,
@@ -123,33 +123,34 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "time() - process_start_time_seconds{name=\"traefik-ingress-lb\"}",
+          "expr": "sum(traefik_backend_server_up{backend=\"$backend\"})/count(traefik_config_reloads_total)",
           "format": "time_series",
           "intervalFactor": 2,
           "refId": "A"
         }
       ],
-      "thresholds": "",
-      "title": "Uptime",
+      "thresholds": "0,1",
+      "title": "$backend status",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
         {
           "op": "=",
-          "text": "N/A",
-          "value": "null"
+          "text": "OK",
+          "value": "1"
         }
       ],
       "valueName": "current"
     },
     {
       "aliasColors": {},
+      "breakPoint": "50%",
       "cacheTimeout": null,
       "combine": {
         "label": "Others",
         "threshold": 0
       },
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "${DS_PROM}",
       "fontSize": "80%",
       "format": "short",
       "gridPos": {
@@ -193,7 +194,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "${DS_PROM}",
       "format": "ms",
       "gauge": {
         "maxValue": 100,
@@ -269,7 +270,7 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "${DS_PROM}",
       "fill": 1,
       "gridPos": {
         "h": 7,
@@ -313,7 +314,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Total requests over 5min",
+      "title": "Total requests over 5min $backend",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -355,7 +356,7 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "${DS_PROM}",
       "fill": 1,
       "gridPos": {
         "h": 7,
@@ -389,7 +390,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(traefik_entrypoint_requests_total{entrypoint=~\"http|https\",code=\"200\"}[5m])",
+          "expr": "rate(traefik_entrypoint_requests_total{entrypoint=\"$entrypoint\",code=\"200\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{method}} : {{code}}",
@@ -441,7 +442,7 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "${DS_PROM}",
       "fill": 1,
       "gridPos": {
         "h": 7,
@@ -475,7 +476,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(traefik_entrypoint_requests_total{entrypoint=~\"http|https\",code!=\"200\"}[5m])",
+          "expr": "rate(traefik_entrypoint_requests_total{entrypoint=\"$entrypoint\",code!=\"200\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{ method }} : {{code}}",
@@ -524,15 +525,16 @@
     },
     {
       "aliasColors": {},
+      "breakPoint": "50%",
       "cacheTimeout": null,
       "combine": {
         "label": "Others",
         "threshold": 0
       },
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "${DS_PROM}",
       "fontSize": "80%",
       "format": "short",
-      "gridPos": {
+     "gridPos": {
         "h": 7,
         "w": 12,
         "x": 0,
@@ -554,24 +556,25 @@
         {
           "expr": "sum(rate(traefik_backend_requests_total[5m])) by (backend) ",
           "format": "time_series",
-          "interval": "",
+         "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{ backend }}",
+          "legendFormat": "{{ backend }}",
           "refId": "A"
         }
       ],
       "title": "Requests by service",
       "type": "grafana-piechart-panel",
-      "valueName": "current"
+      "valueName": "total"
     },
     {
       "aliasColors": {},
+      "breakPoint": "50%",
       "cacheTimeout": null,
       "combine": {
         "label": "Others",
         "threshold": 0
       },
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": "${DS_PROM}",
       "fontSize": "80%",
       "format": "short",
       "gridPos": {
@@ -594,17 +597,17 @@
       "strokeWidth": 1,
       "targets": [
         {
-          "expr": "sum(rate(traefik_entrypoint_requests_total{entrypoint =~ \"http|https\"}[5m])) by (entrypoint) ",
+          "expr": "sum(rate(traefik_entrypoint_requests_total{entrypoint = \"$entrypoint\"}[5m])) by (entrypoint) ",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{ entrypoint }}",
+          "legendFormat": "{{ entrypoint }}",
           "refId": "A"
         }
       ],
       "title": "Requests by protocol",
       "type": "grafana-piechart-panel",
-      "valueName": "current"
+      "valueName": "total"
     }
   ],
   "schemaVersion": 16,
@@ -618,7 +621,7 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_PROMETHEUS}",
+        "datasource": "${DS_PROM}",
         "hide": 0,
         "includeAll": false,
         "label": null,
@@ -626,6 +629,26 @@
         "name": "backend",
         "options": [],
         "query": "label_values(backend)",
+        "refresh": 1,
+        "regex": "",
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "${DS_PROM}",
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "entrypoint",
+        "options": [],
+        "query": "label_values(entrypoint)",
         "refresh": 1,
         "regex": "",
         "sort": 0,
@@ -667,7 +690,7 @@
     ]
   },
   "timezone": "",
-  "title": "Traefik",
+  "title": "Traefik-admin-ingress",
   "uid": "qPdAviJmz",
-  "version": 15
+  "version": 9
 }
