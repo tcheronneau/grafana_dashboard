@@ -1,5 +1,7 @@
 # grafana_dashboard
 
+# Migrate to https://git.mcth.fr/thomas/grafana_dashboard
+
 
 Those Dashboard requires an alias set on hosts.
 
